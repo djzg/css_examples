@@ -1,0 +1,52 @@
+@property --a {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+html, body, div {
+  display: grid;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  background: #000;
+}
+
+body::before, div::before, div::after {
+  background: inherit;
+  content: "";
+}
+
+div, ::before, ::after {
+  grid-area: 1/1;
+}
+
+div {
+  mix-blend-mode: lighten;
+}
+div::before, div::after {
+  grid-area: 1/1;
+  place-self: center;
+  padding: 9em;
+  background: radial-gradient(closest-side, transparent 58.75%, deeppink 94%), linear-gradient(calc(-2 * var(--a, 0deg)), gold, navy);
+  animation: a 3s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+div::before {
+  -webkit-clip-path: inset(9%);
+          clip-path: inset(9%);
+}
+div::after {
+  background: conic-gradient(from var(--a, 0deg), #fff, #333, #fff), radial-gradient(closest-side, #000 47%, #fff, #000 94%);
+  background-blend-mode: multiply;
+  filter: contrast(20) blur(9px) contrast(27) blur(9px) contrast(27);
+  mix-blend-mode: darken;
+}
+
+@keyframes a {
+  to {
+    --a: 3turn;
+  }
+}/*# sourceMappingURL=styles.css.map */

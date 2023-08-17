@@ -1,0 +1,78 @@
+$p: 47%;
+$blur: 9;
+$filter: blur($blur * 1px) contrast(3 * $blur);
+
+// registering custom property
+// only works in Chrome for now
+@property --a {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+html, body, div {
+  display: grid;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  background: #000;
+}
+
+body::before, div::before, div::after {
+  background: inherit;
+  content: '';
+}
+
+// overlap two layers in a grid area of 1 row and 1 column
+div, ::before, ::after {
+  grid-area: 1 / 1;
+}
+
+div {
+  mix-blend-mode: lighten;
+
+  &::before, &::after {
+    // overlap two layers in a grid area of 1 row and 1 column
+    grid-area: 1 / 1;
+    // shrink into minimum available space in center both horizontally and vertically
+    place-self: center;
+    padding: 9em;
+    background:
+      radial-gradient(closest-side, transparent 1.25 * $p, deeppink 2 * $p),
+      linear-gradient(calc(-2 * var(--a, 0deg)), gold, navy);
+
+    // animating the rotation of the shape
+    animation: a 3s cubic-bezier(.65, 0, .35, 1) infinite;
+  };
+
+  &::before {
+    clip-path: inset(9%);
+  };
+
+  &::after {
+    background: 
+      conic-gradient(from var(--a, 0deg), #fff, #333, #fff),
+      // closest-side lets 100% value to fill the nearest side, not the diagonal corner in default behavior
+      // $p gets black at 50% of viewbox and then transitions to white and back to black
+      radial-gradient(closest-side, #000 $p, #fff, #000 2 * $p);
+      
+      // blending both gradients with multiply
+      background-blend-mode: multiply;
+      
+      filter: contrast(20) $filter $filter;
+
+      // blending different elements
+      mix-blend-mode: darken;
+  };
+}
+
+
+@keyframes a {
+  to {
+    --a: 3turn;
+  }
+}
