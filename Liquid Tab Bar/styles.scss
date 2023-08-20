@@ -1,0 +1,97 @@
+@use "sass:math";
+
+$d: 7.5em; // distance
+$p: .2 * $d; // padding
+$r: $p * math.sqrt(2); // radius
+$o: .5 * $p; // offset
+
+@property --k {
+  syntax: '<number>';
+  initial-value: 0;
+  inherits: true;
+}
+
+body, nav, a {
+  display: grid;
+}
+
+body {
+  place-content: center;
+  margin: 0;
+  height: 100vh;
+  background: 
+  repeating-radial-gradient(circle at 25% 25%, transparent 0, hsla(0, 0%, 0%, .2) 1px 4px, transparent 5px 8px)
+  #f03;
+}
+
+nav {
+  // placed into columns of same $d width to make them all evenly spaced
+  grid-auto-flow: column;
+  padding: 0 $p;
+  border-radius: .8 * $r;
+  background: #fff;
+
+  // using mask to exclude shape when selected
+  --mask: 
+  linear-gradient(red 0 0), 
+  radial-gradient(circle at 0 #{$r}, 
+          transparent calc(#{$r} + -.5px), gold calc(#{$r} + .5px)) 
+      calc((var(--k) + .5)*#{$d} + #{$p} + #{-1.5*$r}) 0/ #{$r $o} no-repeat, 
+  radial-gradient(circle at 100% #{$r}, 
+          transparent calc(#{$r} + -.5px), gold calc(#{$r} + .5px)) 
+      calc((var(--k) + .5)*#{$d} + #{$p} + #{.5*$r}) 0/ #{$r $o} no-repeat, 
+  radial-gradient(circle at calc((var(--k) + .5)*#{$d} + #{$p}) #{.5*$o}, 
+          white calc(#{.5*$o} + -1px), transparent  #{.5*$o}), 
+  radial-gradient(circle at calc((var(--k) + .5)*#{$d} + #{$p}) #{-$o}, 
+          blue calc(#{$r} + -.5px), transparent  calc(#{$r} + .5px));
+
+
+  -webkit-mask: var(--mask);
+          mask: var(--mask);
+
+  -webkit-mask-composite: xor, source-over, source-over;
+          mask-composite: exclude, add, add;
+
+  font: .625em / 1.5 ubuntu, sans-serif;
+
+  // animating the movement between selections
+  transition: --k .35s cubic-bezier(.5, -.5, .5, 1.5);
+}
+
+.nav-item {
+  // calculation for the not selected flag using max and min and absolute values
+  --difference: calc(var(--i) - var(--k));
+  --absolute: max(-1 * var(--difference), var(--difference));
+  --notSelectedFlag: min(1, var(--absolute)); 
+  --selectedFlag: calc(1 - var(--notSelectedFlag)) ;
+  box-sizing: border-box;
+  place-content: center;
+  padding-top: $p;
+  width: $d;
+  height: $d;
+  color: hsl(0, 0%, calc(var(--notSelectedFlag) * 50%));
+  text-align: center;
+  text-decoration: none;
+  text-transform: capitalize;
+  filter: sepia(var(--hl));
+
+
+  &::before {
+    font-size: 2em;
+
+    // making all icons black by setting brigthness filter to 0
+    // using flag to select one element as black, others remain as gray
+    filter: brightness(0) contrast(calc(var(--selectedFlag)));
+
+    // placing data icons before the 'a' element
+    content: attr(data-ico)
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus, &:hover {
+    --hl: 1
+  }
+}
