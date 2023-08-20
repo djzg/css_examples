@@ -1,0 +1,77 @@
+html {
+  --c0: #DFB9EA;
+  height: 200vh;
+  scrollbar-color: #DFB9EA gainsboro;
+}
+html::-webkit-scrollbar {
+  width: 0.75em;
+}
+html::-webkit-scrollbar-track {
+  background: gainsboro;
+}
+html::-webkit-scrollbar-thumb {
+  background: #264653;
+}
+
+header {
+  display: grid;
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+}
+
+h1 {
+  --c0: #000;
+  --c1: #fff;
+  place-self: center;
+  width: 85%;
+  font: 700 clamp(0.625em, 8vw, 8em)/0.75 rubik, sans-serif;
+}
+
+span {
+  --c0: #fff;
+  --c1: #DFB9EA;
+  padding: 0 2px;
+  color: var(--c0);
+  font: 1.25em Lucida, cursive;
+}
+
+.box-info-scrollanimation {
+  position: fixed;
+  inset: auto 0 0;
+  margin: 1em;
+  padding: 1em;
+  box-shadow: 2px 2px 5px hsla(0, 0%, 0%, 0.25);
+  border-left: solid 5px #dc3055;
+  background: #851d40;
+  color: #fff;
+  font: 1.25em/1.25 ubuntu, sans-serif;
+}
+
+kbd {
+  padding: 2px;
+  background: hsla(0, 0%, 0%, 0.35);
+  font: 1.1em/1.2 ubuntu monospace;
+}
+
+@supports (animation-timeline: scroll(root)) {
+  body, h1, span {
+    background: linear-gradient(var(--c1, #264653) 0 0) 0/100% no-repeat fixed var(--c0);
+    color: transparent;
+    animation: grow 3s linear forwards;
+    animation-timeline: scroll(root);
+  }
+  @keyframes grow {
+    0% {
+      background-size: 0;
+    }
+  }
+  h1, span {
+    --webkit-background-clip: text;
+    -webkit-background-clip: text;
+            background-clip: text;
+  }
+  .box-info-scrollanimation {
+    display: none;
+  }
+}/*# sourceMappingURL=styles.css.map */
